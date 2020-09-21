@@ -13,11 +13,11 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$DomainPassword,
 	
-	[Parameter(Mandatory=$true)]
-    [string]$MgName,
+#	[Parameter(Mandatory=$true)]
+#    [string]$MgName,
 
-    [Parameter(Mandatory=$true)]
-    [string]$SqlInstance,
+#    [Parameter(Mandatory=$true)]
+#    [string]$SqlInstance,
 	
 	[Parameter(Mandatory = $true)]
 	[String]$AccountName,
@@ -39,7 +39,7 @@ function ChangeDNS() {
             return $false
         }
         Write-Host "Changing DNS to $DCIP"
-        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "vEthernet (Ethernet*"}
+        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "Ethernet 2"}
         Set-DnsClientServerAddress -InterfaceIndex ($Adapter).ifIndex -ServerAddresses $DCIP
         return $true
     } catch {
@@ -66,25 +66,13 @@ function JoinDomain() {
 
 }
 
-function InstallDocker() {
-	Write-Host "Installing docker..."
-	try {
-		Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
-		Install-Package -Name docker -ProviderName DockerMsftProvider -Confirm:$False
-		return $true
-	} catch {
-	    Write-Warning Error[0]
-		Write-Error $_
-	    return $false
-	}
-}
 
 function InstallRSATADModule()
     {
     try {
 	    Add-WindowsFeature RSAT-AD-Powershell;
         Import-Module ActiveDirectory
-		Install-Module powershell-yaml -Force
+#		Install-Module powershell-yaml -Force
         return $true
     } catch {
         return $false
