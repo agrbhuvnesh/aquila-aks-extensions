@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineName": {
+            "value": "mySQLVM"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS3_v2"
+        },
+        "existingVirtualNetworkName": {
+            "value": "k8s-vnet-57344588"
+        },
+        "existingSubnetName": {
+            "value": "k8s-subnet"
+        },
+        "adminUsername": {
+            "value": "sqladmin"
+        },
+        "adminPassword": {
+            "value": "password@123"
+        },
+		"sqlSku": {
+			"value": "Enterprise"
+		},
+		"domainJoinUserName": {
+						"value": "sqladmin@k8swin.com"
+					},
+		"domainJoinUserPassword": {
+			"value": "password@123"
+					},
+		"domainFQDN": {
+			"value": "k8swin.com"
+					},
+		"domainIP": {
+			"value": "10.240.0.159"
+					},
+		"AccountName": {
+			"value": "ITFarm1"
+					}
+    }
+}
