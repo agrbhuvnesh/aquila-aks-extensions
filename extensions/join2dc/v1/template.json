@@ -45,7 +45,7 @@
 		 }
 	},
 	"variables": { 
-        "initScriptUrl": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1"
+        "initScriptUrl": "https://raw.githubusercontent.com/agrbhuvnesh/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1"
 	},
 	"resources": [
 	    {
@@ -65,7 +65,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', 'Aquila.net 10.20.0.66 aquila\\sqladmin password@321 MyInst 10.20.0.68 AquilaGMSA' )]"
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', 'Aquila.net 10.240.0.159 sqladmin@k8swin.com password@123 ITFarm1' )]"
                 }
             }
         }
