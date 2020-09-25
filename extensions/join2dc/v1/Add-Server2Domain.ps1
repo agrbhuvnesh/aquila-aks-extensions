@@ -186,11 +186,12 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 # Set NIC to look at DC for DNS
 $DNSResult = ChangeDNS 
 
+# Join the domain
+$JDResult = JoinDomain 
+
 # Add domain user as sql sysadmin
 AddDomainUserAsSqlSysadmin
 
-# Join the domain
-$JDResult = JoinDomain 
 # Add domain user as local admin
 AddDomainUserAsLocalAdmin
 
