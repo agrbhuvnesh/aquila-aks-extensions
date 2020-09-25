@@ -62,7 +62,7 @@ function AddDomainUserAsLocalAdmin() {
 function AddDomainUserAsSqlSysadmin() {
     Write-Host "Add domain user as as sql sysadmin.."
     Try {
-         Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember $DomainUserName, 'sysadmin'"
+         Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'"
          return $true
     } catch {
              Write-Warning Error[0]
@@ -186,12 +186,13 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 # Set NIC to look at DC for DNS
 $DNSResult = ChangeDNS 
 
-AddDomainUserAsLocalAdmin()
-
-AddDomainUserAsSqlSysadmin()
-
 # Join the domain
 $JDResult = JoinDomain 
+# Add domain user as local admin
+AddDomainUserAsLocalAdmin
+
+# Add domain user as sql sysadmin
+AddDomainUserAsSqlSysadmin
 
 # Install docker
 #$IDResult = InstallDocker 
