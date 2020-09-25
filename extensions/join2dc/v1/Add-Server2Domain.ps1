@@ -188,7 +188,7 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 $DNSResult = ChangeDNS 
 
 # Join the domain
-$JDResult = JoinDomain 
+#$JDResult = JoinDomain 
 
 
 # Add domain user as local admin
