@@ -192,7 +192,7 @@ $DNSResult = ChangeDNS
 
 
 # Add domain user as local admin
-AddDomainUserAsLocalAdmin
+# AddDomainUserAsLocalAdmin
 
 # Add domain user as sql sysadmin
 AddDomainUserAsSqlSysadmin
