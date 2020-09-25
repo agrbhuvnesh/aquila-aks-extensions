@@ -53,8 +53,9 @@ function AddDomainUserAsLocalAdmin() {
          Add-LocalGroupMember -Group "Administrators" -Member $DomainUserName
          return $true
     } catch {
+             $user = whoami
              Write-Warning Error[0]
-             Write-Error $_
+             Write-Error $_ + $user
       return $false
    }
 }
@@ -65,8 +66,9 @@ function AddDomainUserAsSqlSysadmin() {
          Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'"
          return $true
     } catch {
+             $user = whoami
              Write-Warning Error[0]
-             Write-Error $_
+             Write-Error $_ + $user
       return $false
    }
 }
@@ -189,12 +191,12 @@ $DNSResult = ChangeDNS
 # Join the domain
 $JDResult = JoinDomain 
 
-# Add domain user as sql sysadmin
-AddDomainUserAsSqlSysadmin
 
 # Add domain user as local admin
 AddDomainUserAsLocalAdmin
 
+# Add domain user as sql sysadmin
+AddDomainUserAsSqlSysadmin
 
 # Install docker
 #$IDResult = InstallDocker 
