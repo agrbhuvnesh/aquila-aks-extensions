@@ -53,9 +53,8 @@ function AddDomainUserAsLocalAdmin() {
          Add-LocalGroupMember -Group "Administrators" -Member $DomainUserName
          return $true
     } catch {
-             $user = whoami
              Write-Warning Error[0]
-             Write-Error $_ + $user
+             Write-Error $_
       return $false
    }
 }
@@ -66,9 +65,8 @@ function AddDomainUserAsSqlSysadmin() {
          Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'"
          return $true
     } catch {
-             $user = whoami
              Write-Warning Error[0]
-             Write-Error $_ + $user
+             Write-Error $_
       return $false
    }
 }
