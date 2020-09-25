@@ -47,6 +47,30 @@ function ChangeDNS() {
     }
 }
 
+function AddDomainUserAsLocalAdmin() {
+    Write-Host "Add domain user as Local Administrator.."
+    Try {
+         Add-LocalGroupMember -Group "Administrators" -Member $DomainUserName
+         return $true
+    } catch {
+             Write-Warning Error[0]
+             Write-Error $_
+      return $false
+   }
+}
+
+function AddDomainUserAsSqlSysadmin() {
+    Write-Host "Add domain user as as sql sysadmin.."
+    Try {
+         Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember $DomainUserName, 'sysadmin'"
+         return $true
+    } catch {
+             Write-Warning Error[0]
+             Write-Error $_
+      return $false
+   }
+}
+
 function JoinDomain() {
     Write-Host "Join to domain..."
     $joinCred = New-Object pscredential -ArgumentList ([pscustomobject]@{
@@ -161,6 +185,10 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 
 # Set NIC to look at DC for DNS
 $DNSResult = ChangeDNS 
+
+AddDomainUserAsLocalAdmin()
+
+AddDomainUserAsSqlSysadmin()
 
 # Join the domain
 $JDResult = JoinDomain 
