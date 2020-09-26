@@ -77,7 +77,7 @@ function AddDomainUserAsSqlSysadmin() {
 }
 
 function GetSqlVersion() {
-    Write-Host "Add domain user as as sql sysadmin.."
+    Write-Host "GetSqlVersion.."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
                 UserName = "$env:COMPUTERNAME\sqladmin"
@@ -93,16 +93,14 @@ function GetSqlVersion() {
             Disable-PSRemoting -Force
             return $true
     } catch {
-             $user = whoami
-             Write-Host 'user: ' $user 
              Write-Warning Error[0]
-             Write-Error "$_  user: $user  ##"
+             Write-Error $_
       return $false
    }
 }
 
 function AddDomainUserAsSqlSysadmin1() {
-    Write-Host "Add domain user as as sql sysadmin."
+    Write-Host "Add AddDomainUserAsSqlSysadmin .."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
                 UserName = "$env:COMPUTERNAME\sqladmin"
@@ -118,18 +116,11 @@ function AddDomainUserAsSqlSysadmin1() {
             Disable-PSRemoting -Force
             return $true
     } catch {
-             $user = whoami
-             Write-Host 'user: ' $user 
              Write-Warning Error[0]
-             Write-Error "$_  user: $user  ##"
+             Write-Error $_
       return $false
    }
 }
-
-
-
-
-
 
 function JoinDomain() {
     Write-Host "Join to domain..."
