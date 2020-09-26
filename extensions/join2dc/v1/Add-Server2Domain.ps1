@@ -80,7 +80,7 @@ function GetSqlVersion() {
     Write-Host "Add domain user as as sql sysadmin.."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
-                UserName = 'workgroup\sqladmin'
+                UserName = 'sqladmin'
                 Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
             })
             #Submit the job with creds
@@ -88,7 +88,7 @@ function GetSqlVersion() {
 
             #Receive the job
             $jobInfo = Receive-Job -Job $job
-            Write-Host $jobInfo
+            echo $jobInfo
             return $true
     } catch {
              $user = whoami
@@ -103,7 +103,7 @@ function AddDomainUserAsSqlSysadmin1() {
     Write-Host "Add domain user as as sql sysadmin."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
-                UserName = 'workgroup\sqladmin'
+                UserName = 'sqladmin'
                 Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
             })
             #Submit the job with creds
@@ -111,7 +111,7 @@ function AddDomainUserAsSqlSysadmin1() {
 
             #Receive the job
             $jobInfo = Receive-Job -Job $job
-            Write-Host $jobInfo
+            echo $jobInfo
             return $true
     } catch {
              $user = whoami
