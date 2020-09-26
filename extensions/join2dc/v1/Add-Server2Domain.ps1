@@ -76,6 +76,57 @@ function AddDomainUserAsSqlSysadmin() {
    }
 }
 
+function GetSqlVersion() {
+    Write-Host "Add domain user as as sql sysadmin1.."
+    Try {
+            $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
+                UserName = 'sqladmin'
+                Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
+            })
+            #Submit the job with creds
+            $job = Start-Job {importsystemmodules; Invoke-Sqlcmd -Query 'select @@version'  -ServerInstance LOCALHOST} -Credential $creds | Get-Job | Wait-Job
+
+            #Receive the job
+            $jobInfo = Receive-Job -Job $job
+            Write-Host $jobInfo
+            return $true
+    } catch {
+             $user = whoami
+             Write-Host '[user: $user]' 
+             Write-Warning Error[0]
+             Write-Error "$_  $user"
+      return $false
+   }
+}
+
+function AddDomainUserAsSqlSysadmin1() {
+    Write-Host "Add domain user as as sql sysadmin1.."
+    Try {
+            $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
+                UserName = 'sqladmin'
+                Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
+            })
+            #Submit the job with creds
+            $job = Start-Job {importsystemmodules; Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'" } -Credential $creds | Get-Job | Wait-Job
+
+            #Receive the job
+            $jobInfo = Receive-Job -Job $job
+            Write-Host $jobInfo
+            return $true
+    } catch {
+             $user = whoami
+             Write-Host '[user: $user]' 
+             Write-Warning Error[0]
+             Write-Error "$_  $user"
+      return $false
+   }
+}
+
+
+
+
+
+
 function JoinDomain() {
     Write-Host "Join to domain..."
     $joinCred = New-Object pscredential -ArgumentList ([pscustomobject]@{
@@ -189,12 +240,13 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 }
 
 # Set NIC to look at DC for DNS
-$DNSResult = ChangeDNS 
+#$DNSResult = ChangeDNS 
 
 # Join the domain
-$JDResult = JoinDomain 
+#$JDResult = JoinDomain 
 
-
+GetSqlVersion
+AddDomainUserAsSqlSysadmin1
 # Add domain user as sql sysadmin
 AddDomainUserAsSqlSysadmin
 
