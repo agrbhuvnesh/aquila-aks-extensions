@@ -76,7 +76,7 @@ function AddDomainUserAsSqlSysadmin() {
 		   Enable-PSRemoting -Force
            Invoke-Command -FilePath temp.ps1 -Credential $creds -ComputerName $env:COMPUTERNAME
 		   Disable-PSRemoting -Force
-		   Remove-Item temp.ps1
+		   Remove-Item temp.ps1 -Force
            return $true
     } catch {
              Write-Warning Error[0]

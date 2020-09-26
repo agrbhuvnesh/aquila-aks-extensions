@@ -53,7 +53,7 @@
             "dependsOn": [],
             "location": "[resourceGroup().location]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('targetVMName'),'/cse', '-', parameters('targetVMType'), '-', parameters('vmIndex'))]", 
+            "name": "[concat(parameters('targetVMName'),'/cse', '-', parameters('targetVMType'), '-', parameters('targetVMName'), '-', parameters('vmIndex'))]", 
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "CustomScriptExtension",

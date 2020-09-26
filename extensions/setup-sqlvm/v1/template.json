@@ -56,13 +56,15 @@
         "imageOffer": {
             "type": "String",
             "allowedValues": [
+                "sql2019-ws2019",
+                "sql2017-ws2019",
                 "SQL2017-WS2016",
                 "SQL2016SP1-WS2016",
                 "SQL2016SP2-WS2016",
                 "SQL2014SP3-WS2012R2",
                 "SQL2014SP2-WS2012R2"
             ],
-            "defaultValue": "SQL2017-WS2016",
+            "defaultValue": "sql2017-ws2019",
             "metadata": {
                 "description": "Windows Server and SQL Offer"
             }
@@ -193,9 +195,6 @@
                 }
             }
         ],
-        "publicIpAddressName": "[concat(parameters('virtualMachineName'), '-publicip-', uniqueString(parameters('virtualMachineName')))]",
-        "publicIpAddressType": "Dynamic",
-        "publicIpAddressSku": "Basic",
         "diskConfigurationType": "NEW",
         "nsgId": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
         "subnetRef": "[resourceID(parameters('existingVNetResourceGroup'), 'Microsoft.Network/virtualNetWorks/subnets', parameters('existingVirtualNetworkName'), parameters('existingSubNetName'))]",
@@ -210,24 +209,12 @@
         },
         "tempDbPath": "D:\\SQLTemp",
 		"initScriptUrl": "https://raw.githubusercontent.com/agrbhuvnesh/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1",
-		"join2dcArgs": "[concat(parameters('domainFQDN'), ' ', parameters('domainIP'), ' ', parameters('domainJoinUserName'),' ', parameters('domainJoinUserPassword'),' ', parameters('AccountName'))]"
+		"join2dcArgs": "[concat(parameters('domainFQDN'), ' ', parameters('domainIP'),  ' ', parameters('adminUsername'), ' ', parameters('adminPassword'),' ', parameters('domainJoinUserName'),' ', parameters('domainJoinUserPassword'),' ', parameters('AccountName'))]"
     },
     "resources": [
         {
-            "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2019-02-01",
-            "name": "[variables('publicIpAddressName')]",
-            "location": "[parameters('location')]",
-            "sku": {
-                "name": "[variables('publicIpAddressSku')]"
-            },
-            "properties": {
-                "publicIpAllocationMethod": "[variables('publicIpAddressType')]"
-            }
-        },
-        {
             "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2019-02-01",
+            "apiVersion": "2020-05-01",
             "name": "[variables('networkSecurityGroupName')]",
             "location": "[parameters('location')]",
             "properties": {
@@ -236,12 +223,11 @@
         },
         {
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2018-10-01",
+            "apiVersion": "2020-05-01",
             "name": "[variables('networkInterfaceName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]",
-                "[concat('Microsoft.Network/publicIpAddresses/', variables('publicIpAddressName'))]"
+                "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -251,10 +237,7 @@
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
                             },
-                            "privateIPAllocationMethod": "Dynamic",
-                            "publicIpAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
-                            }
+                            "privateIPAllocationMethod": "Dynamic"
                         }
                     }
                 ],
@@ -266,11 +249,11 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2018-10-01",
+            "apiVersion": "2019-12-01",
             "name": "[parameters('virtualMachineName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
             ],
             "properties": {
                 "hardwareProfile": {
@@ -373,7 +356,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', variables('join2dcArgs') )]"
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', variables('join2dcArgs'), ' > C:\\WindowsAzure\\Logs\\Plugins\\Microsoft.Compute.CustomScriptExtension\\cse_output.log' )]"
                 }
             }
         }
@@ -386,6 +369,10 @@
 		"join2dcArgs": {
             "type": "String",
             "value": "[variables('join2dcArgs')]"
-        }
+        },
+		"networkInterface":{
+        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName')),'2020-05-01')]",
+        "type": "object"
+		}
     }
 }
