@@ -135,12 +135,12 @@ function JoinDomain() {
     })
     Try {
         Add-Computer -Domain $DomainName -Credential $joinCred
-		Start-Sleep 30
+		Start-Sleep 10
         return $true
     } catch {
 	    Write-Warning Error[0]
 		Write-Error $_
-        Start-Sleep 20
+        Start-Sleep 10
         return $false
     }
 
@@ -245,7 +245,7 @@ $DNSResult = ChangeDNS
 # Join the domain
 $JDResult = JoinDomain 
 
-GetSqlVersion
+# GetSqlVersion
 AddDomainUserAsSqlSysadmin1
 # Add domain user as sql sysadmin
 #AddDomainUserAsSqlSysadmin
