@@ -248,7 +248,7 @@ $JDResult = JoinDomain
 GetSqlVersion
 AddDomainUserAsSqlSysadmin1
 # Add domain user as sql sysadmin
-AddDomainUserAsSqlSysadmin
+#AddDomainUserAsSqlSysadmin
 
 # Add domain user as local admin
 AddDomainUserAsLocalAdmin
