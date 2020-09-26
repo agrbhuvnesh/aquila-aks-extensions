@@ -84,7 +84,7 @@ function GetSqlVersion() {
                 Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
             })
             #Submit the job with creds
-            $job = Start-Job {importsystemmodules; Invoke-Sqlcmd -Query 'select @@version'  -ServerInstance LOCALHOST} -Credential $creds | Get-Job | Wait-Job
+            $job = Start-Job {importsystemmodules; Invoke-Sqlcmd -Query 'select @@version'} -Credential $creds | Get-Job | Wait-Job
 
             #Receive the job
             $jobInfo = Receive-Job -Job $job
