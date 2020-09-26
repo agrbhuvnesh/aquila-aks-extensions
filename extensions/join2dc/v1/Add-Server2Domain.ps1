@@ -77,10 +77,10 @@ function AddDomainUserAsSqlSysadmin() {
 }
 
 function GetSqlVersion() {
-    Write-Host "Add domain user as as sql sysadmin1.."
+    Write-Host "Add domain user as as sql sysadmin.."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
-                UserName = 'sqladmin'
+                UserName = 'workgroup\sqladmin'
                 Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
             })
             #Submit the job with creds
@@ -92,18 +92,18 @@ function GetSqlVersion() {
             return $true
     } catch {
              $user = whoami
-             Write-Host '[user: $user]' 
+             Write-Host 'user: ' $user 
              Write-Warning Error[0]
-             Write-Error "$_  $user"
+             Write-Error "$_  user: $user  ##"
       return $false
    }
 }
 
 function AddDomainUserAsSqlSysadmin1() {
-    Write-Host "Add domain user as as sql sysadmin1.."
+    Write-Host "Add domain user as as sql sysadmin."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
-                UserName = 'sqladmin'
+                UserName = 'workgroup\sqladmin'
                 Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
             })
             #Submit the job with creds
@@ -115,9 +115,9 @@ function AddDomainUserAsSqlSysadmin1() {
             return $true
     } catch {
              $user = whoami
-             Write-Host '[user: $user]' 
+             Write-Host 'user: ' $user 
              Write-Warning Error[0]
-             Write-Error "$_  $user"
+             Write-Error "$_  user: $user  ##"
       return $false
    }
 }
