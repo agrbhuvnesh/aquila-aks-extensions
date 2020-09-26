@@ -53,6 +53,8 @@ function AddDomainUserAsLocalAdmin() {
          Add-LocalGroupMember -Group "Administrators" -Member $DomainUserName
          return $true
     } catch {
+             $user = whoami
+             Write-Host $user
              Write-Warning Error[0]
              Write-Error $_
       return $false
@@ -66,6 +68,8 @@ function AddDomainUserAsSqlSysadmin() {
          return $true
     } catch {
              $user = whoami
+             Write-Host $user
+             Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember 'k8swin\sqllinux', 'sysadmin'" 
              Write-Warning Error[0]
              Write-Error "$_  $user"
       return $false
@@ -185,10 +189,10 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 }
 
 # Set NIC to look at DC for DNS
-$DNSResult = ChangeDNS 
+#$DNSResult = ChangeDNS 
 
 # Join the domain
-$JDResult = JoinDomain 
+#$JDResult = JoinDomain 
 
 
 # Add domain user as sql sysadmin
