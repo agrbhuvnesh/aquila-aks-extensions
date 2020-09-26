@@ -80,12 +80,12 @@ function JoinDomain() {
     })
     Try {
         Add-Computer -Domain $DomainName -Credential $joinCred
-		Start-Sleep 10
+		Start-Sleep 30
         return $true
     } catch {
 	    Write-Warning Error[0]
 		Write-Error $_
-        Start-Sleep 10
+        Start-Sleep 20
         return $false
     }
 
@@ -188,14 +188,14 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 $DNSResult = ChangeDNS 
 
 # Join the domain
-#$JDResult = JoinDomain 
+$JDResult = JoinDomain 
 
-
-# Add domain user as local admin
-# AddDomainUserAsLocalAdmin
 
 # Add domain user as sql sysadmin
 AddDomainUserAsSqlSysadmin
+
+# Add domain user as local admin
+AddDomainUserAsLocalAdmin
 
 # Install docker
 #$IDResult = InstallDocker 
