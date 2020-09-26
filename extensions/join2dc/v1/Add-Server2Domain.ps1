@@ -199,7 +199,7 @@ function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts)
 AddDomainUserAsSqlSysadmin
 
 # Add domain user as local admin
-AddDomainUserAsLocalAdmin
+#AddDomainUserAsLocalAdmin
 
 # Install docker
 #$IDResult = InstallDocker 
