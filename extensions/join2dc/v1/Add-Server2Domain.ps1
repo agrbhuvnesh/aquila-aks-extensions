@@ -8,6 +8,12 @@ param(
     [string]$DCIP,
 
     [Parameter(Mandatory=$true)]
+    [string]$AdminUserName,
+    
+    [Parameter(Mandatory=$true)]
+    [string]$AdminPassword,
+    
+    [Parameter(Mandatory=$true)]
     [string]$DomainUserName,
 
     [Parameter(Mandatory=$true)]
@@ -53,8 +59,6 @@ function AddDomainUserAsLocalAdmin() {
          Add-LocalGroupMember -Group "Administrators" -Member $DomainUserName
          return $true
     } catch {
-             $user = whoami
-             Write-Host $user
              Write-Warning Error[0]
              Write-Error $_
       return $false
@@ -62,66 +66,22 @@ function AddDomainUserAsLocalAdmin() {
 }
 
 function AddDomainUserAsSqlSysadmin() {
-    Write-Host "Add domain user as as sql sysadmin.."
-    Try {
-         Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'"
-         return $true
-    } catch {
-             $user = whoami
-             Write-Host $user
-             Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember 'k8swin\sqllinux', 'sysadmin'" 
-             Write-Warning Error[0]
-             Write-Error "$_  $user"
-      return $false
-   }
-}
-
-function GetSqlVersion() {
-    Write-Host "GetSqlVersion.."
-    Try {
-            $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
-                UserName = "$env:COMPUTERNAME\sqladmin"
-                Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
-            })
-            Enable-PSRemoting –force
-            Write-Host "Add AddDomainUserAsSqlSysadmin .b4 Start-Job."
-            #Submit the job with creds
-            $job = Start-Job {importsystemmodules; Invoke-Sqlcmd -Query 'select @@version'} -Credential $creds | Get-Job | Wait-Job
-
-            Write-Host "Add AddDomainUserAsSqlSysadmin after Start-Job."
-            #Receive the job
-            $jobInfo = Receive-Job -Job $job
-            
-            Disable-PSRemoting -Force
-            return $true
-    } catch {
-             Write-Warning Error[0]
-             Write-Error $_
-      return $true
-   }
-}
-
-function AddDomainUserAsSqlSysadmin1() {
     Write-Host "Add AddDomainUserAsSqlSysadmin .."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
-                UserName = "$env:COMPUTERNAME\sqladmin"
-                Password = (ConvertTo-SecureString -String ('password@123' -replace "`n|`r") -AsPlainText -Force)[0]
-            })
-            Enable-PSRemoting –force
-            #Submit the job with creds
-            $job = Start-Job {importsystemmodules; Invoke-Sqlcmd -Query "EXEC sp_addsrvrolemember 'k8swin\sqllinux', 'sysadmin'" } -Credential $creds | Get-Job | Wait-Job
-            Write-Host "Add AddDomainUserAsSqlSysadmin after Start-Job."
-            #Receive the job
-            $jobInfo = Receive-Job -Job $job
-            Write-Host "Add AddDomainUserAsSqlSysadmin after jobinfo."
-            
-            Disable-PSRemoting -Force
-            return $true
+                UserName = "$env:COMPUTERNAME\$AdminUserName"
+                Password = (ConvertTo-SecureString -String ($AdminPassword -replace "`n|`r") -AsPlainText -Force)[0]
+           })
+           Set-Content -Path temp.ps1 -Value "Invoke-Sqlcmd -Query ""EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'"""
+		   Enable-PSRemoting -Force
+           Invoke-Command -FilePath temp.ps1 -Credential $creds -ComputerName $env:COMPUTERNAME
+		   Disable-PSRemoting -Force
+		   Remove-Item temp.ps1
+           return $true
     } catch {
              Write-Warning Error[0]
              Write-Error $_
-      return $true
+      return $false
    }
 }
 
@@ -243,13 +203,11 @@ $DNSResult = ChangeDNS
 # Join the domain
 $JDResult = JoinDomain 
 
-GetSqlVersion
-AddDomainUserAsSqlSysadmin1
-# Add domain user as sql sysadmin
-#AddDomainUserAsSqlSysadmin
-
 # Add domain user as local admin
 AddDomainUserAsLocalAdmin
+
+# Add domain user as sql sysadmin
+AddDomainUserAsSqlSysadmin
 
 # Install docker
 #$IDResult = InstallDocker 
