@@ -4,7 +4,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$DomainName,
 	
-	[Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$true)]
     [string]$DCIP,
 
     [Parameter(Mandatory=$true)]
@@ -66,7 +66,7 @@ function AddDomainUserAsLocalAdmin() {
 }
 
 function AddDomainUserAsSqlSysadmin() {
-    Write-Host "Add AddDomainUserAsSqlSysadmin .."
+    Write-Host "Add domain user as sql server sysadmin .."
     Try {
             $creds = New-Object pscredential -ArgumentList ([pscustomobject]@{
                 UserName = "$env:COMPUTERNAME\$AdminUserName"
@@ -103,7 +103,6 @@ function JoinDomain() {
     }
 
 }
-
 
 function InstallRSATADModule()
     {
