@@ -18,16 +18,16 @@
             "value": "sqladmin"
         },
         "adminPassword": {
-            "value": "password@123"
+            "value": ""
         },
 		"sqlSku": {
 			"value": "Enterprise"
 		},
 		"domainJoinUserName": {
-						"value": "sqladmin@k8swin.com"
+						"value": "k8swin\sqllinux"
 					},
 		"domainJoinUserPassword": {
-			"value": "password@123"
+			"value": ""
 					},
 		"domainFQDN": {
 			"value": "k8swin.com"
