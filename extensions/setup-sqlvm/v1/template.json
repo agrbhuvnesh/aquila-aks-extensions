@@ -371,7 +371,7 @@
             "value": "[variables('join2dcArgs')]"
         },
 		"networkInterface":{
-        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName')),'2020-05-01')]",
+        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName')),'2020-05-01')]",
         "type": "object"
 		}
     }
