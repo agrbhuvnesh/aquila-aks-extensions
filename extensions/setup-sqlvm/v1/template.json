@@ -204,8 +204,8 @@
             "createOption": "empty",
             "caching": "ReadOnly",
             "writeAcceleratorEnabled": false,
-            "storageAccountType": "Premium_LRS",
-            "diskSizeGB": 1023
+            "storageAccountType": "StandardSSD_LRS",
+            "diskSizeGB": 128
         },
         "tempDbPath": "D:\\SQLTemp",
 		"initScriptUrl": "https://raw.githubusercontent.com/agrbhuvnesh/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1",
@@ -263,7 +263,7 @@
                     "osDisk": {
                         "createOption": "fromImage",
                         "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
+                            "storageAccountType": "StandardSSD_LRS"
                         }
                     },
                     "imageReference": {
