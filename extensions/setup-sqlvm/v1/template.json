@@ -366,6 +366,10 @@
             "type": "String",
             "value": "[parameters('adminUsername')]"
         },
+	    "virtualMachineName": {
+            "type": "String",
+            "value": "[parameters('virtualMachineName')]"
+        },
 		"join2dcArgs": {
             "type": "String",
             "value": "[variables('join2dcArgs')]"
