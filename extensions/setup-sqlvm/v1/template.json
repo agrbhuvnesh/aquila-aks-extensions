@@ -205,7 +205,7 @@
             "caching": "ReadOnly",
             "writeAcceleratorEnabled": false,
             "storageAccountType": "StandardSSD_LRS",
-            "diskSizeGB": 128
+            "diskSizeGB": 256
         },
         "tempDbPath": "D:\\SQLTemp",
 		"initScriptUrl": "https://raw.githubusercontent.com/agrbhuvnesh/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1",
@@ -362,21 +362,13 @@
         }
     ],
     "outputs": {
-        "adminUsername": {
-            "type": "String",
-            "value": "[parameters('adminUsername')]"
-        },
-	    "virtualMachineName": {
-            "type": "String",
-            "value": "[parameters('virtualMachineName')]"
-        },
 		"join2dcArgs": {
             "type": "String",
             "value": "[variables('join2dcArgs')]"
         },
-		"networkInterface":{
-        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName')),'2020-05-01')]",
-        "type": "object"
-		}
+		"sqlvmip":{
+        "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName')),'2016-09-01').ipConfigurations[0].properties.privateIPAddress]",
+        "type": "String"
+    }
     }
 }
