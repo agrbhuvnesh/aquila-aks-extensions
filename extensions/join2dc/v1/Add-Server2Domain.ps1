@@ -45,7 +45,7 @@ function ChangeDNS() {
             return $false
         }
         Write-Host "Changing DNS to $DCIP"
-        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "Ethernet 2"}
+        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "vEthernet (Ethernet*" -or $_.Name -Notlike "vEthernet (nat*"}
         Set-DnsClientServerAddress -InterfaceIndex ($Adapter).ifIndex -ServerAddresses $DCIP
         return $true
     } catch {
@@ -73,6 +73,7 @@ function AddDomainUserAsSqlSysadmin() {
                 Password = (ConvertTo-SecureString -String ($AdminPassword -replace "`n|`r") -AsPlainText -Force)[0]
            })
            Set-Content -Path temp.ps1 -Value "Invoke-Sqlcmd -Query ""EXEC sp_addsrvrolemember '$DomainUserName', 'sysadmin'"""
+		   Add-Content -Path temp.ps1 -Value "Invoke-Sqlcmd -Query ""EXEC sp_addsrvrolemember '$AccountName', 'sysadmin'"""
 		   Enable-PSRemoting -Force
            Invoke-Command -FilePath temp.ps1 -Credential $creds -ComputerName $env:COMPUTERNAME
 		   Disable-PSRemoting -Force
