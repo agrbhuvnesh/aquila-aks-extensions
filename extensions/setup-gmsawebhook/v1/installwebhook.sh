@@ -24,6 +24,12 @@ download_install_gmsa_crd() {
 
 download_deploy_gmsa_webhook() {
 
+  if [ -f /opt/azure/containers/provision.complete ]; then
+    echo "provision.complete  Already ran to success exiting..." > ~/test.txt
+  else
+     echo "provision.complete  not exiting..." > ~/test.txt  
+  fi
+
   local URL="https://raw.githubusercontent.com/kubernetes-sigs/windows-gmsa/master/admission-webhook/deploy/deploy-gmsa-webhook.sh"
 
   if which curl &> /dev/null; then
@@ -31,10 +37,12 @@ download_deploy_gmsa_webhook() {
   else
     wget -O "deploy-gmsa-webhook.sh" "$URL"
   fi
+  printf "downloaded deployment script"
+  chmod +x deploy-gmsa-webhook.sh
 
-  chmod +777 deploy-gmsa-webhook.sh
-
-  ./deploy-gmsa-webhook.sh --file ~/.kube/gmsa-webhook-manifest.yaml
+  printf "Start deploying gmsa webhook"
+  ./deploy-gmsa-webhook.sh --file ~/.kube/gmsa-webhook-manifest.yaml >> ~/test.txt
+  printf "Deploying gmsa webhook finished"
 
 }
 
